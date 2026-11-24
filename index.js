@@ -1,23 +1,21 @@
 const form = document.querySelector('form');
 const input = document.querySelector('input');
 
-form.addEventListener('submit', async event => {
+form.addEventListener('submit', async (event) => {
     event.preventDefault();
-   navigator.serviceWorker.register('/notes-for-physics/sw.js', {
-    scope: '/notes-for-physics/uv/service/'
-})
-        scope: __uv$config.prefix
-    }).then(() => {
-        let url = input.value.trim();
-        if (!isUrl(url)) url = 'https://www.google.com/search?q=' + url;
-        else if (!(url.startsWith('https://') || url.startsWith('http://'))) url = 'http://' + url;
 
+    try {
+        await navigator.serviceWorker.register('/notes-for-physics/sw.js', {
+            scope: '/notes-for-physics/uv/service/'
+        });
+    } catch (err) {
+        console.error('SW registration failed:', err);
+    }
 
-        window.location.href = __uv$config.prefix + __uv$config.encodeUrl(url);
-    });
+    let url = input.value.trim();
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        url = 'https://' + url;
+    }
+
+    window.location.href = '/notes-for-physics/uv/service/' + __uv$config.encodeUrl(url);
 });
-
-function isUrl(val = ''){
-    if (/^http(s?):\/\//.test(val) || val.includes('.') && val.substr(0, 1) !== ' ') return true;
-    return false;
-};
