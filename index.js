@@ -5,7 +5,7 @@ form.addEventListener('submit', async event => {
     event.preventDefault();
    navigator.serviceWorker.register('/notes-for-physics/sw.js', {
     scope: '/notes-for-physics/uv/service/'
-}{
+})
         scope: __uv$config.prefix
     }).then(() => {
         let url = input.value.trim();
